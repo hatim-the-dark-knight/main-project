@@ -126,8 +126,7 @@ def get_renderer(model, cfg, device):
     return renderer
 
 
-def get_dataset(cfg, mode='train', return_idx=False, return_category=False,
-                **kwargs):
+def get_dataset(cfg, mode='train'):
     ''' Returns a dataset instance.
 
     Args:
@@ -137,7 +136,6 @@ def get_dataset(cfg, mode='train', return_idx=False, return_category=False,
         return_category (bool): whether to return model category
     '''
     # Get fields with cfg
-    method = cfg['method']
     input_type = cfg['data']['input_type']
     dataset_name = cfg['data']['dataset_name']
     dataset_folder = cfg['data']['path']
@@ -156,10 +154,7 @@ def get_dataset(cfg, mode='train', return_idx=False, return_category=False,
     split = splits[mode]
     fields = dvr.config.get_data_fields(cfg, mode=mode)
 
-    if input_type == 'idx':
-        input_field = data.IndexField()
-        fields['inputs'] = input_field
-    elif input_type == 'image':
+    if input_type == 'image':
         random_view = True if \
             (mode == 'train' or dataset_name == 'NMR') else False
         resize_img_transform = data.ResizeImage(cfg['data']['img_size_input'])
@@ -169,15 +164,6 @@ def get_dataset(cfg, mode='train', return_idx=False, return_category=False,
             with_mask=False, with_camera=False,
             extension=cfg['data']['img_extension_input'],
             n_views=cfg['data']['n_views_input'], random_view=random_view)
-
-    else:
-        input_field = None
-
-    if return_idx:
-        fields['idx'] = data.IndexField()
-
-    if return_category:
-        fields['category'] = data.CategoryField()
 
     manager = Manager()
     shared_dict = manager.dict()
