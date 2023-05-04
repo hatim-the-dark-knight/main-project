@@ -2,7 +2,7 @@ model:
   lambda_depth: 10.
 data:
   dataset_name: images
-  path: media/demo/choy_renderings
+  path: media/demo/me
 training:
   out_dir:  out/demo/demo_combined
   n_workers: 8
