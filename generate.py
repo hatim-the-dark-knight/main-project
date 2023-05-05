@@ -140,14 +140,6 @@ if __name__ == '__main__':
             mesh.export(mesh_out_file)
             out_file_dict['mesh'] = mesh_out_file
 
-            # For DTU save also transformed-back mesh to file
-            if cfg['data']['dataset_name'] == 'DTU':
-                scale_mat = data.get('camera.scale_mat_0')[0]
-                mesh_transformed = transform_mesh(mesh, scale_mat)
-                mesh_out_file = os.path.join(
-                    mesh_dir, '%s_world_scale.%s' % (modelname, mesh_extension))
-                mesh_transformed.export(mesh_out_file)
-
         except RuntimeError:
             print("Error generating mesh %s (%s)." % (modelname, category))
 
@@ -161,17 +153,7 @@ if __name__ == '__main__':
                 ext = os.path.splitext(filepath)[1]
                 out_file = os.path.join(generation_vis_dir, '%02d_%s%s'
                                         % (c_it, k, ext))
-                if cfg['data']['dataset_name'] == 'DTU':
-                    # rotate for DTU to visualization purposes
-                    r = R.from_euler('xz', [-90, 10], degrees=True).as_matrix() @ \
-                        R.from_euler('xzy', [220, 44.9, 10.6], degrees=True
-                                    ).as_matrix()
-                    transform = np.eye(4).astype(np.float32)
-                    transform[:3, :3] = r.astype(np.float32)
-                    mesh = transform_mesh(mesh, transform)
-                    mesh.export(out_file)
-                else:
-                    shutil.copyfile(filepath, out_file)
+                shutil.copyfile(filepath, out_file)
 
             if cfg['data']['input_type'] == 'image':
                 img = data.get('inputs')[0].permute(1, 2, 0).numpy()
