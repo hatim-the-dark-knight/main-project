@@ -1,0 +1,15 @@
+model:
+  lambda_depth: 10.
+data:
+  dataset_name: images
+  path: media/demo/me
+training:
+  out_dir:  out/demo/demo_combined
+  n_workers: 8
+  n_training_points: 768
+  model_selection_metric: loss_depth_eval
+generation:
+  generation_dir: generation
+  mesh_extension: 'glb'
+test:
+  model_file: https://s3.eu-central-1.amazonaws.com/avg-projects/differentiable_volumetric_rendering/models/single_view_reconstruction/multi-view-supervision/ours_combined-af2bce07.pt
